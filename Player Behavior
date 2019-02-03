@@ -39,9 +39,6 @@ public class PlayerBehavior : MonoBehaviour {
         Vector3 movement = new Vector3(movehorizontal, 0.0f, movevertical);
 
         rb.AddForce(movement * speed);
-
-        if (Input.GetKey("escape"))
-            Application.Quit();
     }
 
     void OnTriggerEnter(Collider other)
