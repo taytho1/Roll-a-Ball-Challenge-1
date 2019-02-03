@@ -1,0 +1,96 @@
+using System.Collections;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerBehavior : MonoBehaviour {
+
+    public float speed;
+    public Text countText;
+    public Text winText;
+    public Text scoreText;
+    public Text loseText;
+    public Text livesText;
+    public GameObject player;
+    public GameObject enemys;
+    public GameObject obsticles;
+
+    private Rigidbody rb;
+    private int count;
+    private int score;
+    private int lives;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        count = 0;
+        score = 0;
+        lives = 3;
+        SetAllText();
+        winText.text = "";
+        loseText.text = "";
+    }
+
+    void FixedUpdate()
+    {
+        float movehorizontal = Input.GetAxis("Horizontal");
+        float movevertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(movehorizontal, 0.0f, movevertical);
+
+        rb.AddForce(movement * speed);
+
+        if (Input.GetKey("escape"))
+            Application.Quit();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Pick Up"))
+        {
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            score = score + 1;
+            SetAllText();
+        }
+        else if (other.gameObject.CompareTag("enemy"))
+        {
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            lives = lives - 1;
+            SetAllText();
+        }
+        if(score == 12)
+        {
+            transform.position = new Vector3(60.0f, 0.5f, 0.0f);
+        }
+        if (lives == 0)
+        {
+            Destroy(player);
+        }
+        if(score == 24)
+        {
+            Destroy(enemys);
+            Destroy(obsticles);
+        }
+      
+    }
+
+    void SetAllText()
+    {
+        countText.text = "Count: " + count.ToString();
+      
+        scoreText.text = "Score: " + score.ToString();
+        if (score == 24)
+        {
+            winText.text = "You Win!";
+        }
+
+        livesText.text = "Lives: " + lives.ToString();
+        if(lives == 0)
+        {
+            loseText.text = "You Lose!";
+        }
+    }
+    
+}
